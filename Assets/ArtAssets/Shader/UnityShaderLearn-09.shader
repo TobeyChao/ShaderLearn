@@ -62,7 +62,7 @@ Shader "UnityShaderLearn/ShaderLearn-09"
 				fixed3 worldLightDir = normalize(_WorldSpaceLightPos0.xyz);
 				//float diffuseFactor = saturate(dot(worldLightDir, worldNormal));
 				float diffuseFactor = dot(worldLightDir, worldNormal) * 0.5f + 0.5f;
-				fixed3 diffuseColor = _LightColor0.rgb * _Color.rgb * tex2D(_RampTex, fixed2(diffuseFactor, diffuseFactor)).rgb * _Color.rgb;
+				fixed3 diffuseColor = _LightColor0.rgb * tex2D(_RampTex, fixed2(diffuseFactor, diffuseFactor)).rgb * _Color.rgb;
 				fixed3 viewDir = normalize(UnityWorldSpaceViewDir(input.positionW.xyz));
 				// Phong
 				//fixed3 reflectLightDir = normalize(reflect(-worldLightDir, worldNormal));
@@ -70,9 +70,6 @@ Shader "UnityShaderLearn/ShaderLearn-09"
 				// Blinn-Phong
 				fixed3 halfDir =  normalize(viewDir + worldLightDir);
 				float specularFactor = pow(max(0, dot(halfDir, worldNormal)), _Gloss);
-				// 高光反向穿透问题
-				//specularFactor *= step(0, dot(worldLightDir, worldNormal));
-				specularFactor *= smoothstep(0, 0.12, dot(worldLightDir, worldNormal));
 				fixed3 specularColor = _LightColor0.rgb * _Specular.rgb * specularFactor;
 				fixed3 color = ambientColor + diffuseColor + specularColor;
 				return fixed4(color, 1.0f);
